@@ -13,7 +13,7 @@ app = Flask(__name__)
 movies = pd.read_csv("movies.csv")
 
 # TMDb API Configuration
-TMDB_API_KEY = "fd51106fd282dbbf7997e1067fff840d"  # Replace with your actual TMDb API key
+TMDB_API_KEY = "your_actual_tmdb_api_key_here"  # Replace with your actual TMDb API key
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
 
 # Emoji mapping for emotions

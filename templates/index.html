@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Movie Recommender</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1e1e2f,#3a3a5a);color:white;display:flex;justify-content:center;align-items:center;height:100vh}
+.container{text-align:center;background:rgba(255,255,255,0.05);padding:25px;border-radius:15px;backdrop-filter:blur(10px);width:350px;box-shadow:0 8px 25px rgba(0,0,0,0.3)}
+video{border-radius:10px;width:100%}
+button{margin-top:15px;padding:10px 20px;border:none;border-radius:8px;background:#ff4b2b;color:white;font-size:16px;cursor:pointer;transition:.3s}
+button:hover{background:#ff416c}
+.result{margin-top:20px;padding:15px;border-radius:10px;background:rgba(255,255,255,0.08);display:none}
+.loading{margin-top:10px;display:none}
+.movie-title{font-size:20px;font-weight:bold;margin:10px 0}
+.rating{color:#ffd700}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎬 Movie Recommender</h1>
+<video id="video" autoplay playsinline></video>
+<button onclick="capture()">Recommend Movie</button>
+<div class="loading" id="loading">⏳ Analyzing...</div>
+<div class="result" id="result">
+<div style="font-size: 40px; margin: 10px 0;" id="emoji"></div>
+<p><b>Emotion:</b> <span id="emotion"></span></p>
+<p><b>Genre:</b> <span id="genre"></span></p>
+<p class="movie-title" id="movie"></p>
+<p class="rating">⭐ <span id="rating"></span></p>
+<p id="review"></p>
+</div>
+</div>
+<script>
+const video=document.getElementById('video');
+navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}})
+.then(stream=>{video.srcObject=stream})
+.catch(()=>{alert("Camera access denied!")});
+
+function capture(){
+const loading=document.getElementById("loading");
+const resultBox=document.getElementById("result");
+loading.style.display="block";
+resultBox.style.display="none";
+
+let canvas=document.createElement('canvas');
+canvas.width=video.videoWidth;
+canvas.height=video.videoHeight;
+let ctx=canvas.getContext('2d');
+ctx.drawImage(video,0,0);
+let image=canvas.toDataURL('image/jpeg',0.7);
+
+fetch('/analyze',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({image:image})
+})
+.then(res=>res.json())
+.then(data=>{
+loading.style.display="none";
+resultBox.style.display="block";
+document.getElementById("emoji").innerText=data.emoji;
+document.getElementById("emotion").innerText=data.emotion;
+document.getElementById("genre").innerText=data.genre;
+document.getElementById("movie").innerText=data.movie;
+document.getElementById("rating").innerText=data.rating;
+document.getElementById("review").innerText=data.review;
+})
+.catch(()=>{
+loading.style.display="none";
+alert("Error analyzing image");
+});
+}
+</script>
+</body>
+</html>

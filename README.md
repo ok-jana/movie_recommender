@@ -74,7 +74,7 @@ Open your browser and navigate to `http://localhost:5000`
 - The application caches TMDb API responses for 5 minutes to avoid hitting rate limits
 - Reviews are truncated to 200 characters for better display
 - **TMDb API Required**: This application strictly uses TMDb API for movie data. No fallback data is provided.
-- The application now includes 25+ movies across 5 different genres for better recommendations
+- The application now includes 150+ movies across 5 different genres for better recommendations
 - **Important**: You must configure a valid TMDb API key for the application to work properly
 
 ## Troubleshooting
